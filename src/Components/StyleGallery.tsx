@@ -1,5 +1,7 @@
 // import Style from "./Style";
 
+import Tile from "./Tile";
+
 type Props = {
   onUpdate: any;
   items: string[];
@@ -31,40 +33,34 @@ function StyleGallery({ onUpdate, items, type, selectedItems }: Props) {
         onUpdate(updatedselectedColors, "selectedColors");
       }
     }
+    if (type === "footer") {
+      if (selectedItems?.includes(item)) {
+        const updatedFooter: string[] = [""];
+        onUpdate(updatedFooter, "footer");
+      } else {
+        const updatedPattern = [item];
+        onUpdate(updatedPattern, "footer");
+      }
+    }
   };
 
   return (
-    <div className="flex flex-col p-4 gap-2 w-full h-full items-center">
+    <div className="StyleGallery flex flex-col p-4 gap-2 w-full h-full items-center">
       <div className="flex px-4 w-full font-semibold max-w-4xl flex-row justify-start items-center gap-2">
         <div className="rounded-full h-[20px] w-[20px] text-white text-sm bg-black flex justify-center items-center">
-          {type === "colors" ? "1" : "2"}
+          {type === "colors" ? "1" : type === "footer" ? "2" : "3"}
         </div>
-        Choose {type === "colors" ? "Colors" : "Pattern"}
+        Choose {type}
       </div>
       <div className="flex flex-row p-4 gap-4 w-full max-w-4xl overflow-x-scroll bg-white rounded-lg no-scrollbar">
-        {items.map((item) => (
-          <div
-            key={item}
-            className={`rounded-xl h-20 w-48 min-w-[80px] overflow-hidden `}
-            onClick={() =>
-              type === "colors"
-                ? handleClick(item, "colors")
-                : handleClick(item, "pattern")
-            }
-            style={
-              type === "pattern"
-                ? { background: `url(${item})` }
-                : {
-                    backgroundColor: item,
-                  }
-            }
-          >
-            {selectedItems.includes(item) ? (
-              <div className="w-full h-full bg-[rgba(0,0,0,0.2)] flex justify-center items-center">
-                <div className="rounded-full w-6 h-6 bg-white"></div>
-              </div>
-            ) : null}
-          </div>
+        {items.map((item, index) => (
+          <Tile
+            key={index}
+            item={item}
+            handleClick={handleClick}
+            isSelected={selectedItems.includes(item)}
+            type={type}
+          />
         ))}
       </div>
     </div>
